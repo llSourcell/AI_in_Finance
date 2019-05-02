@@ -166,12 +166,12 @@ class App extends Component {
     async.series([
       (callback) => {
         randStock = stocks[Math.floor(Math.random()*stocks.length)];
-        console.log(randStock);
-        fetch('/getstockdata/?stock=' + randStock[1], {
+        fetch('http://127.0.0.1:5000/getstockdata/?stock=' + randStock[1], {
           method: 'get'
         }).then(function(res) {
           return res.json();
-        }).then(function(response) {
+        })
+        .then(function(response) {
           data = JSON.parse(response).data;
           callback();
         });

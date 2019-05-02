@@ -1,14 +1,17 @@
 import requests
 from flask import Flask, request, jsonify, send_from_directory
-app = Flask(__name__)
 import pandas as pd
 import quandl
 import math
 import random
 import os
 import numpy as np
-from sklearn import preprocessing, cross_validation, svm
+from sklearn import preprocessing,model_selection, svm
 from sklearn.linear_model import LinearRegression
+from flask_cors import CORS
+
+app = Flask(__name__)
+CORS(app)
 
 if 'ON_HEROKU' in os.environ:
     @app.route('/')
@@ -42,7 +45,7 @@ if 'ON_HEROKU' in os.environ:
 @app.route('/getstockdata/')
 def getStockData():
     stock = request.args.get('stock', default=None, type=None)
-    quandl.ApiConfig.api_key = "qWcicxSctVxrP9PhyneG"
+    quandl.ApiConfig.api_key = "PUokDTEesLyFDvsfySm3"
     allData = quandl.get('WIKI/'+stock)
     dataLength = 251
     allDataLength = len(allData)
@@ -73,7 +76,7 @@ def getStockData():
     mlData = mlData[:-dataLength]
     y = np.array(mlData['label'])
 
-    X_train, X_test, y_train, y_test = cross_validation.train_test_split(X, y, test_size=0.3)
+    X_train, X_test, y_train, y_test = model_selection.train_test_split(X, y, test_size=0.3)
 
     clf = LinearRegression()
     clf.fit(X_train, y_train)
